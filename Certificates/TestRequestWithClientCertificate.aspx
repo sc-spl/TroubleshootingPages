@@ -12,13 +12,19 @@
 <body>
 <form id="form1" runat="server">
     <p>
-        <asp:Label ID="Label1" runat="server" Text="Label">Endpoint URL</asp:Label>
+        <asp:Label ID="Label1" runat="server" Text="Label">Is Azure</asp:Label>
     </p>
     <p>
-        <asp:TextBox ID="EndpoingTbx" runat="server"></asp:TextBox>
+        <asp:Checkbox ID="IsAzureCheckBox" runat="server"></asp:Checkbox>
     </p>
     <p>
-        <asp:Label ID="Label2" runat="server" Text="Label">Thumbprint</asp:Label>
+        <asp:Label ID="Label2" runat="server" Text="Label">Endpoint URL</asp:Label>
+    </p>
+    <p>
+        <asp:TextBox ID="EndpointTbx" runat="server"></asp:TextBox>
+    </p>
+    <p>
+        <asp:Label ID="Label3" runat="server" Text="Label">Thumbprint</asp:Label>
     </p>
     <p>
         <asp:TextBox ID="ThumbprintTbx" runat="server"></asp:TextBox>
@@ -49,27 +55,36 @@
             protected async void TestButton_Click(object sender, EventArgs e)
             {
                 var thumbprint = ThumbprintTbx.Text;
-                var url = EndpoingTbx.Text;
+                var url = EndpointTbx.Text;
+                var isAzure = IsAzureCheckBox.Checked;
 
                 using (var clientHandler = new HttpClientHandler())
                 {
-                    var x509Certificate = FindClientCertificate("My", StoreLocation.LocalMachine, X509FindType.FindByThumbprint, thumbprint, true);
-
-                    if (x509Certificate == null)
+                    StoreLocation store = isAzure ? StoreLocation.CurrentUser : StoreLocation.LocalMachine;
+                    
+                    var x509CertificateWithoutCheck = FindClientCertificate("My", store, X509FindType.FindByThumbprint, thumbprint, true);
+                    var x509CertificateWithCheck = FindClientCertificate("My", store, X509FindType.FindByThumbprint, thumbprint, false);
+                    
+                    if (x509CertificateWithoutCheck == null)
                     {
-                        ResultLbl.Text = "Certificate was not found";
+                        ResultLbl.Text = "<p>Certificate was not found even when AllowInvalidClientCertificates = true</p>";
                         return;
+                    }
+                    
+                    if (x509CertificateWithCheck == null)
+                    {
+                        ResultLbl.Text = "<p>Certificate was not found when AllowInvalidClientCertificates = false, however was found when AllowInvalidClientCertificates = true</p>";
                     }
 
                     clientHandler.ClientCertificateOptions = ClientCertificateOption.Manual;
-                    clientHandler.ClientCertificates.Add(x509Certificate);
+                    clientHandler.ClientCertificates.Add(x509CertificateWithoutCheck);
 
                     var client = new HttpClient(clientHandler, true);
 
                     using (var requestMessage = new HttpRequestMessage(HttpMethod.Get, new Uri(url)))
                     {
                         var result = await client.SendAsync(requestMessage).ConfigureAwait(false);
-                        ResultLbl.Text = "Response status code: " + result.StatusCode;
+                        ResultLbl.Text += "<p>Response status code: " + result.StatusCode + "</p>";
                     }
                 }
             }
