@@ -30,8 +30,9 @@
                 {
                     Response.Write("<p>Interaction Ip is " + new IPAddress(Tracker.Current.Interaction.Ip) + "</p>");
                     Response.Write("<p>Interaction.HasGeoIpData is " + Tracker.Current.Interaction.HasGeoIpData + "</p>");
-                    Response.Write("<p>Interaction.GeoData.Country Ip is " + Tracker.Current.Interaction.GeoData.Country + "</p>");
-                    Response.Write("<p>Interaction.GeoData.City Ip is " + Tracker.Current.Interaction.GeoData.City + "</p>");
+                    Response.Write("<p>Interaction.GeoData.Country is " + Tracker.Current.Interaction.GeoData.Country + "</p>");
+                    Response.Write("<p>Interaction.GeoData.City is " + Tracker.Current.Interaction.GeoData.City + "</p>");
+                    Response.Write("<p>Interaction.GeoData.MetroCode is " + Tracker.Current.Interaction.GeoData.MetroCode + "</p>");
                 }
             }
         </script>
