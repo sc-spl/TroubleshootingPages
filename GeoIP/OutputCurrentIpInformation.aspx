@@ -33,6 +33,8 @@
                     Response.Write("<p>Interaction.GeoData.Country is " + Tracker.Current.Interaction.GeoData.Country + "</p>");
                     Response.Write("<p>Interaction.GeoData.City is " + Tracker.Current.Interaction.GeoData.City + "</p>");
                     Response.Write("<p>Interaction.GeoData.MetroCode is " + Tracker.Current.Interaction.GeoData.MetroCode + "</p>");
+                    Response.Write("<p>Interaction.GeoData.Latitude is " + Tracker.Current.Interaction.GeoData.Latitude + "</p>");
+                    Response.Write("<p>Interaction.GeoData.Longitude is " + Tracker.Current.Interaction.GeoData.Longitude + "</p>");
                 }
             }
         </script>
