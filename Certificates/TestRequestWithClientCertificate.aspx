@@ -92,14 +92,25 @@
                         sb.Append("</p>");
                     }
 
-                    var modifier = new Sitecore.Xdb.Common.Web.CertificateHttpClientHandlerModifier(certificate);
-                    var handler = new HttpClientHandler();
-                    modifier.Process(handler);
-
-                    var result = await SendRequest(handler, xConnectURL).ConfigureAwait(false);
-                    sb.Append("<p>Response status code: ");
-                    sb.Append(result.StatusCode);
-                    sb.Append("</p>");
+                    try
+                    {
+                        var modifier = new Sitecore.Xdb.Common.Web.CertificateHttpClientHandlerModifier(certificate);
+                        var handler = new HttpClientHandler();
+                        modifier.Process(handler);
+                        var result = await SendRequest(handler, xConnectURL).ConfigureAwait(false);
+                        sb.Append("<p>Response status code: ");
+                        sb.Append(result.StatusCode);
+                        sb.Append("</p>");
+                    }
+                    catch (Exception e)
+                    {
+                        sb.Append("<p>Error happened:");
+                        sb.Append(e.Message);
+                        sb.Append("</p>");
+                        sb.Append("<p>");
+                        sb.Append(e.StackTrace);
+                        sb.Append("</p>");
+                    }
 
                     CollectionResult.Text = sb.ToString();
                 }
