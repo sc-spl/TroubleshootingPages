@@ -27,13 +27,13 @@
             <asp:Label ID="Label2" runat="server" Text="Label">Endpoint URL</asp:Label>
         </p>
         <p>
-            <asp:TextBox ID="EndpointTbx" runat="server"></asp:TextBox>
+            <asp:TextBox ID="EndpointTbx" Width="400px" runat="server"></asp:TextBox>
         </p>
         <p>
             <asp:Label ID="Label3" runat="server" Text="Label">Thumbprint</asp:Label>
         </p>
         <p>
-            <asp:TextBox ID="ThumbprintTbx" runat="server"></asp:TextBox>
+            <asp:TextBox ID="ThumbprintTbx" Width="400px" runat="server"></asp:TextBox>
         </p>
         <p>
             <asp:Button ID="TestButton" runat="server" Text="Test Connection" OnClick="TestButton_Click" />
