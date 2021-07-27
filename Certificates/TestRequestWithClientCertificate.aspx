@@ -2,6 +2,7 @@
 
 <%@ Import Namespace="System.Net.Http" %>
 <%@ Import Namespace="System.Security.Cryptography.X509Certificates" %>
+<%@ Import Namespace="Sitecore.Xdb.ReferenceData.Client.Xmgmt" %>
 <%@ Assembly Name="System.Net.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" %>
 <%@ Import Namespace="System.Threading.Tasks" %>
 
@@ -48,7 +49,7 @@
 
                     sb.Append("<p><b>Test for connection strings:</b></p>");
 
-                    var appsettingValue = ConfigurationManager.AppSettings["AllowInvalidClientCertificates"];
+                    var appsettingValue = AppSettingsResolver.Resolve("AllowInvalidClientCertificates");
                     if (appsettingValue == null)
                     {
                         sb.Append("<p>AllowInvalidClientCertificates is not set</p>");
@@ -94,7 +95,7 @@
 
                     try
                     {
-                        var modifier = new Sitecore.Xdb.Common.Web.CertificateHttpClientHandlerModifier(certificate);
+                        var modifier = new Sitecore.Xdb.Common.Web.CertificateHttpClientHandlerModifier(certificate, appsettingValue);
                         var handler = new HttpClientHandler();
                         modifier.Process(handler);
                         var result = await SendRequest(handler, xConnectURL).ConfigureAwait(false);
