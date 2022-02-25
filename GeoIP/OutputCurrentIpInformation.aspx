@@ -1,6 +1,7 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" %>
 <%@ Import Namespace="System.Net" %>
 <%@ Import Namespace="Sitecore.Analytics" %>
+<%@ Import Namespace="Sitecore.Configuration" %>
 
 <!DOCTYPE html>
 
@@ -14,6 +15,20 @@
         <script runat="server">
             protected void Page_Load()
             {
+                Response.Write("<p><b>======== Settings Information ========</b></p>");
+                Response.Write("<p>Analytics.ForwardedRequestHttpHeader is " + Settings.GetSetting("Analytics.ForwardedRequestHttpHeader", string.Empty) + "</p>");
+                Response.Write("<p>Analytics.ForwardedRequestHttpHeaderClientIpIndex is " + Settings.GetIntSetting("Analytics.ForwardedRequestHttpHeaderClientIpIndex", 0) + "</p>");
+                
+                var headerIpIndexNode = Factory.GetConfigNode("pipelines/createVisit/processor[@type='Sitecore.Analytics.Pipelines.CreateVisits.XForwardedFor, Sitecore.Analytics']/HeaderIpIndex");
+                if (headerIpIndexNode != null)
+                {
+                    Response.Write("<p>XForwardedFor processor HeaderIpIndex attribute is " + headerIpIndexNode.InnerText + "</p>");
+                }
+                else
+                {
+                    Response.Write("<p>XForwardedFor processor HeaderIpIndex attribute is missing.</p>");
+                }
+                
                 Response.Write("<p><b>======== Request Information ========</b></p>");
                 var ipAddress = HttpContext.Current.Request.UserHostAddress;
                 Response.Write("<p>IpAddress: " + ipAddress + "</p>");
@@ -21,6 +36,7 @@
                 {
                     Response.Write("<p>" + key + ": " + HttpContext.Current.Request.Headers[key] + "</p>");
                 }
+                
                 Response.Write("<p><b>======== Analytics Information ========</b></p>");
                 if (Tracker.Current == null || Tracker.Current.Interaction == null || Tracker.Current.Interaction.Ip == null)
                 {
